@@ -1,6 +1,6 @@
 var mongoose = require("mongoose")
 
-var Url = mongoose.model("url", {
+var shortURL = mongoose.model("url", {
     orignalURL: {
         type: String,
         required: true,
@@ -13,4 +13,4 @@ var Url = mongoose.model("url", {
 
 })
 
-module.exports = { Url }
+module.exports = { shortURL }
