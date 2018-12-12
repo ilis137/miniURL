@@ -8,17 +8,42 @@ module.exports = (app) => {
         const url = req.params.URLToShorten;
 
         if (validUrl.isUri(url)) {
-            console.log(shortid.generate())
-                // const data = new shortURL({
-                //     originalURL: url,
-                //     shortURL: shortid.generate()
-                // })
+            //            console.log(shortid.generate())
+            const data = new shortURL({
+                orignalURL: url,
+                shortURL: shortid.generate()
+            })
+
+            data.save().then(doc => {
+                console.log(doc)
+                res.send(doc)
+            }, e => {
+                res.status(400).send({
+                    orignalURL: "error saving into database",
+                    shortURL: "invalid URL"
+                })
+            })
 
         } else {
-            console.log("invalid URL")
+            res.send({
+                orignalURL: "url to shorten does not match standard fromat",
+                shortURL: "invalid URL"
+            })
         }
 
 
 
     })
+    app.get("/:mini", (req, res) => {
+        const miniUrl = req.params.mini
+        shortURL.findOne({ shortURL: miniUrl }, "orignalURL").then(doc => {
+            res.redirect(doc.orignalURL)
+        }).catch(e => {
+            res.status(404).send()
+        })
+
+
+    })
+
+
 }
